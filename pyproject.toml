@@ -1,0 +1,39 @@
+[project]
+name = "music-tag-web"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    # Core Framework - Upgraded for Python 3.10 compatibility
+    "django==3.2.23", # LTS version, supports Python 3.10
+    "djangorestframework==3.14.0", # Fixed collections.MutableMapping issue
+    # Authentication - Replaced deprecated djangorestframework-jwt
+    "djangorestframework-simplejwt==5.2.2",
+    # Celery - Upgraded to 5.x for Python 3.10
+    "celery==5.2.7",
+    "django-celery-beat==2.4.0",
+    "django-celery-results==2.4.0",
+    # Django Extensions
+    "django-cors-headers==3.13.0",
+    "django-filter==22.1",
+    "django-mysql==4.8.0",
+    # Server
+    "gevent==22.10.2",
+    "gunicorn==20.1.0",
+    # Core Libraries
+    "music-tag==0.4.3",
+    "pillow==9.5.0",
+    "pycryptodomex==3.17",
+    "python-dateutil==2.8.2",
+    "requests==2.31.0",
+    "mako==1.2.4",
+    # Additional dependencies for compatibility
+    "redis==4.5.5",
+    "pyexecjs==1.5.1",
+    "tqdm==4.65.0",
+    "mysqlclient==2.1.1",
+    "sqlalchemy==1.4.48",
+    "lxml==4.9.2",
+    "pathos==0.3.1",
+]

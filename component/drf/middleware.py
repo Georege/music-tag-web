@@ -21,6 +21,17 @@ logger = logging.getLogger('blueapps')
 
 class AppExceptionMiddleware(MiddlewareMixin):
 
+    def process_request(self, request):
+        # 兼容旧版前端：强制将 'jwt' 前缀替换为 'Bearer'
+        # 前端发送: Authorization: jwt <token>
+        # SimpleJWT 期望: Authorization: Bearer <token>
+        auth_header = request.META.get('HTTP_AUTHORIZATION', '')
+        if auth_header and auth_header.lower().startswith('jwt '):
+            new_auth = 'Bearer ' + auth_header[4:]
+            request.META['HTTP_AUTHORIZATION'] = new_auth
+            # print(f"DEBUG: Rewrote Authorization header to: {new_auth[:15]}...")
+        return None
+
     def process_exception(self, request, exception):
         """
         app后台错误统一处理

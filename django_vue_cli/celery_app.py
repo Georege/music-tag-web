@@ -18,7 +18,8 @@ app = Celery("django_vue_cli")
 # the configuration object to child processes.
 # - namespace='CELERY' means all celery-related configuration keys
 #   should have a `CELERY_` prefix.
-app.config_from_object("django.conf:settings")
+# For Celery 5.x, we load config directly from Django settings
+app.config_from_object("django.conf:settings", namespace="CELERY")
 
 # Load task modules from all registered Django app configs.
 app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)

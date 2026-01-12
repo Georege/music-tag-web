@@ -123,17 +123,22 @@ STATIC_ROOT = 'static'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 IS_USE_CELERY = False
 
+# Celery Configuration (Celery 5.x style)
 if IS_USE_CELERY:
-    BROKER_URL = f"redis://{REDIS_HOST}:6379/1"
+    # Celery 5.x uses CELERY_ prefix with namespace parameter
+    CELERY_BROKER_URL = f"redis://{REDIS_HOST}:6379/1"
+    CELERY_RESULT_BACKEND = f"redis://{REDIS_HOST}:6379/1"
     CELERY_TIMEZONE = 'Asia/Shanghai'
-    INSTALLED_APPS += ("django_celery_beat", "django_celery_results")
     CELERY_ENABLE_UTC = False
-    ENABLE_UTC = False
-    DJANGO_CELERY_BEAT_TZ_AWARE = False
-
+    
+    INSTALLED_APPS += ("django_celery_beat", "django_celery_results")
+    
     CELERY_TASK_SERIALIZER = "pickle"
     CELERY_ACCEPT_CONTENT = ['pickle', ]
-    CELERYBEAT_SCHEDULER = "django_celery_beat.schedulers.DatabaseScheduler"
+    CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers.DatabaseScheduler"
+    
+    # Django Celery Beat specific
+    DJANGO_CELERY_BEAT_TZ_AWARE = False
 
 REST_FRAMEWORK = {
     "EXCEPTION_HANDLER": "component.drf.generics.exception_handler",
@@ -142,7 +147,7 @@ REST_FRAMEWORK = {
     "PAGE_SIZE": 10,
     "TEST_REQUEST_DEFAULT_FORMAT": "json",
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
     ],
@@ -154,14 +159,33 @@ REST_FRAMEWORK = {
     "NON_FIELD_ERRORS_KEY": "params_error",
 }
 
-JWT_AUTH = {
-    # 过期时间，生成的took七天之后不能使用
-    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=7),
-    # 刷新时间 之后的token时间值
-    'JWT_ALLOW_REFRESH': True,
-    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=7),
-    # 请求头携带的参数
-    'JWT_AUTH_HEADER_PREFIX': 'JWT'
+# Simple JWT Configuration (替换 djangorestframework-jwt)
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=7),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': False,
+    'UPDATE_LAST_LOGIN': False,
+
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': SECRET_KEY,
+    'VERIFYING_KEY': None,
+    'AUDIENCE': None,
+    'ISSUER': None,
+    'JWK_URL': None,
+    'LEEWAY': 0,
+
+    'AUTH_HEADER_TYPES': ('Bearer', 'JWT'),  # Middleware 可能会重写为 Bearer
+    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'TOKEN_TYPE_CLAIM': 'token_type',
+    
+    'JTI_CLAIM': 'jti',
 }
 BASE_URL = "https://music.163.com/"
 REVERSE_PROXY_TYPE = "nginx"

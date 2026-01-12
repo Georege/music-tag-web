@@ -1,17 +1,38 @@
-Django==2.2.6
-celery==4.4.7
-django-celery-beat==2.2.0
-django-celery-results==1.2.1
-django-cors-headers==3.2.1
-django-filter==2.0.0
-djangorestframework==3.8.1
-python-dateutil==2.8.2
-requests==2.27.1
+# Core Framework - Upgraded for Python 3.10 compatibility
+Django==3.2.23
+djangorestframework==3.14.0
+
+# Authentication - Replaced deprecated djangorestframework-jwt
+djangorestframework-simplejwt==5.2.2
+
+# Celery - Upgraded to 5.x for Python 3.10
+celery==5.2.7
+django-celery-beat==2.4.0
+django-celery-results==2.4.0
+
+# Django Extensions
+django-cors-headers==3.13.0
+django-filter==22.1
+django-mysql==4.8.0
+
+# Server
 gunicorn==20.1.0
-gevent==21.12.0
-djangorestframework-jwt==1.11.0
+gevent==22.10.2
+
+# Core Libraries
+python-dateutil==2.8.2
+requests==2.31.0
 music-tag==0.4.3
-Pillow==9.4.0
+Pillow==9.5.0
 pycryptodomex==3.17
-Mako==1.0.6
-django-mysql==3.8.1
+Mako==1.2.4
+
+# Additional dependencies
+redis==4.5.5
+mysqlclient==2.1.1
+sqlalchemy==1.4.48
+PyExecJS==1.5.1
+tqdm==4.65.0
+lxml==4.9.2
+pathos==0.3.1
+
